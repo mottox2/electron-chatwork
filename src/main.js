@@ -1,17 +1,13 @@
 'use strict';
 
-// アプリケーションをコントロールするモジュール
 var app = require('app');
-// ウィンドウを作成するモジュール
+var Menu = require('menu');
 var BrowserWindow = require('browser-window');
 
-// クラッシュレポート
 require('crash-reporter').start();
 
-// メインウィンドウはGCされないようにグローバル宣言
 var mainWindow = null;
 
-// 全てのウィンドウが閉じたら終了
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin') {
     app.quit();
@@ -26,15 +22,35 @@ app.on('ready', function() {
     "zoom-factor": 0.9
   });
   mainWindow.loadUrl('https://www.chatwork.com/');
-  //mainWindow.openDevTools(true);
 
-  // ウィンドウが閉じられたらアプリも終了
   mainWindow.on('closed', function() {
     mainWindow = null;
   });
 
-  // ファイルをドラッグしたと時のイベントを削除
   mainWindow.webContents.on('will-navigate', function(e) {
     e.preventDefault()
   });
+
+  var template = [
+    {
+      label: "Application",
+      submenu: [
+        { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+      ]
+    },
+    {
+      label: "編集",
+      submenu: [
+          { label: "取り消す", accelerator: "Command+Z", selector: "undo:" },
+          { label: "やり直す", accelerator: "Shift+Command+Z", selector: "redo:" },
+          { type: "separator" },
+          { label: "切り取り", accelerator: "Command+X", selector: "cut:" },
+          { label: "コピー", accelerator: "Command+C", selector: "copy:" },
+          { label: "貼り付け", accelerator: "Command+V", selector: "paste:" },
+          { label: "すべてを選択", accelerator: "Command+A", selector: "selectAll:" }
+      ]
+    }
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 });
