@@ -18,11 +18,14 @@ app.on('window-all-closed', function() {
   }
 });
 
-// Electronの初期化完了後に実行
 app.on('ready', function() {
-  // メイン画面の表示。ウィンドウの幅、高さを指定できる
-  mainWindow = new BrowserWindow({width: 1080, height: 800});
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow = new BrowserWindow({
+    width: 1080,
+    height: 800,
+    preload: __dirname + '/index.js',
+    "zoom-factor": 0.9
+  });
+  mainWindow.loadUrl('https://www.chatwork.com/');
   //mainWindow.openDevTools(true);
 
   // ウィンドウが閉じられたらアプリも終了
