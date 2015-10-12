@@ -3,10 +3,12 @@
 var app = require('app');
 var Menu = require('menu');
 var BrowserWindow = require('browser-window');
+var ipc = require('ipc');
 
 require('crash-reporter').start();
 
 var mainWindow = null;
+var keepWindow = null;
 
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin') {
@@ -16,20 +18,30 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
   mainWindow = new BrowserWindow({
-    width: 1080,
+    width: 1480,
     height: 800,
     preload: __dirname + '/index.js',
     "zoom-factor": 0.9
   });
   mainWindow.loadUrl('https://www.chatwork.com/');
+  mainWindow.openDevTools(true);
 
   mainWindow.on('closed', function() {
     mainWindow = null;
+    app.quit();
   });
 
   mainWindow.webContents.on('will-navigate', function(e) {
     e.preventDefault()
   });
+
+  keepWindow = new BrowserWindow({
+    width: 800,
+    height: 500
+  });
+  keepWindow.loadUrl('file://' + __dirname + '/keep.html');
+  keepWindow.openDevTools(true);
+
 
   var template = [
     {
@@ -52,5 +64,30 @@ app.on('ready', function() {
     }
   ];
 
+  template.push({
+    label: "開発",
+    submenu: [
+      {
+            label: 'Reload',
+            accelerator: 'Command+R',
+            click: function() { mainWindow.restart(); }
+      },
+      {
+            label: 'Reload',
+            accelerator: 'Shift+Command+R',
+            click: function() { keepWindow.restart(); }
+      },
+      {
+        label: 'デベロッパーツール',
+        accelerator: 'Alt+Command+I',
+        click: function() { mainWindow.toggleDevTools(); }
+      },
+    ]});
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
+  keepWindow.webContents.on('did-finish-load', function() {
+    ipc.on('keep:click', function(event, arg) {
+      keepWindow.webContents.send('keep:register', arg);
+    });
+  });
 });
