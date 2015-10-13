@@ -37,11 +37,12 @@ app.on('ready', function() {
 
   keepWindow = new BrowserWindow({
     width: 800,
-    height: 500
+    height: 1000,
+    x: 0,
+    y: 0
   });
   keepWindow.loadUrl('file://' + __dirname + '/keep.html');
   keepWindow.openDevTools(true);
-
 
   var template = [
     {
@@ -88,6 +89,11 @@ app.on('ready', function() {
   keepWindow.webContents.on('did-finish-load', function() {
     ipc.on('keep:click', function(event, arg) {
       keepWindow.webContents.send('keep:register', arg);
+    });
+
+    ipc.on('loadurl', function(event, args) {
+      mainWindow.loadUrl(args.url);
+      mainWindow.focus();
     });
   });
 });

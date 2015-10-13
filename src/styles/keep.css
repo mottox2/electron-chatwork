@@ -1,0 +1,114 @@
+html {
+  overflow: hidden;
+}
+
+#box {
+  height: 100%;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  height: 100%;
+  font-size: 13px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Droid Sans', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ Pro W3', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
+  line-height: 1.48;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Droid Sans', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ Pro W3', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
+  margin: 4px 0;
+}
+
+.message {
+  padding: 12px;
+  border-bottom: 1px solid #e6e6e6;
+  position: relative;
+}
+
+.messageAccount {
+  font-weight: bold;
+}
+
+.messageArea {
+  padding-left: 50px;
+}
+
+.messageAvatar {
+  position: absolute;
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 20px;
+}
+
+.messageRoom {
+  font-size: 12px;
+  display: inline-block;
+  color: #0084b2;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.messageRemove{
+  font-size: 12px;
+  margin-left: 8px;
+  display: inline-block;
+  color: #F9423A;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.avatarTiny {
+  max-width: 16px;
+  max-height: 16px;
+  border-radius: 8px;
+}
+
+.messageSendTime {
+  font-size: 11px;
+  color: #888;
+  position: absolute;
+  top: 10px;
+  right: 5px;
+}
+
+.chatInfo {
+  border-radius: 2px;
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.chatInfo .title {
+  padding: 4px 8px;
+  margin: -8px -8px 8px;
+  background-color: #f5f5f5;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+  border-bottom: 1px solid #ccc;
+}
+
+.chatTimeLineReply {
+  background: #91b05f;
+  border-radius: 2px;
+  font-size: 11px;
+  display: inline-block;
+  padding: 3px 5px;
+  color: #fff;
+  margin: 0 3px 5px 0;
+  vertical-align: middle;
+}
+
+.chatQuote {
+  border-left: 4px solid #ddd;
+  background: #eee;
+  padding: 8px 12px;
+  margin: 8px 0;
+}
+
+.chatQuote .title {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+}

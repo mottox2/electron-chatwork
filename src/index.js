@@ -22,12 +22,16 @@ window.onload = function(){
     renderTimeLine.apply(TimeLineView, [a, b]);
 
     $('._message').each(function(i, message) {
-      var mid = $(this).data('mid');
-      var content = $(this).find('pre').html();
+      var $self = $(this);
       $(message).find('._timeStamp').click(function() {
         $(this).css('background', 'red');
         ipc.send('keep:click', {
-          message: content
+          rid: $self.data('rid'),
+          mid: $self.data('mid'),
+          accountName: $self.find('.chatName').text(),
+          accountAvatar: $self.find('._avatar').attr('src'),
+          message: $self.find('pre').html(),
+          send_time: $(this).text()
         });
       });
     });
