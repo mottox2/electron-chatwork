@@ -4,6 +4,7 @@ var app = require('app');
 var Menu = require('menu');
 var BrowserWindow = require('browser-window');
 var ipc = require('ipc');
+var shell = require('shell');
 
 require('crash-reporter').start();
 
@@ -25,6 +26,10 @@ app.on('ready', function() {
   });
   mainWindow.loadUrl('https://www.chatwork.com/');
   mainWindow.openDevTools(true);
+  mainWindow.webContents.on('new-window', function(event, url) {
+    shell.openExternal(url);
+    event.preventDefault();
+  })
 
   mainWindow.on('closed', function() {
     mainWindow = null;
@@ -43,6 +48,10 @@ app.on('ready', function() {
   });
   keepWindow.loadUrl('file://' + __dirname + '/keep.html');
   keepWindow.openDevTools(true);
+  keepWindow.webContents.on('new-window', function(event, url) {
+    shell.openExternal(url);
+    event.preventDefault();
+  })
 
   var template = [
     {
