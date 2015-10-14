@@ -1,10 +1,13 @@
 'use strict';
-
+require("babel/register")
 var app = require('app');
 var Menu = require('menu');
 var BrowserWindow = require('browser-window');
 var ipc = require('ipc');
 var shell = require('shell');
+
+var MainWindow = require('./mainWindow');
+var KeepWindow = require('./keepWindow');
 
 require('crash-reporter').start();
 
@@ -18,40 +21,28 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
-  mainWindow = new BrowserWindow({
-    width: 1480,
-    height: 800,
-    preload: __dirname + '/index.js',
-    "zoom-factor": 0.9
-  });
-  mainWindow.loadUrl('https://www.chatwork.com/');
-  mainWindow.openDevTools(true);
-  mainWindow.webContents.on('new-window', function(event, url) {
-    shell.openExternal(url);
-    event.preventDefault();
-  })
-
-  mainWindow.on('closed', function() {
-    mainWindow = null;
-    app.quit();
+  keepWindow = new KeepWindow();
+  keepWindow.window.on('closed', function() {
+    keepWindow = null;
   });
 
-  mainWindow.webContents.on('will-navigate', function(e) {
-    e.preventDefault()
-  });
+  keepWindow.window.webContents.on('did-finish-load', function() {
+    mainWindow = new MainWindow();
 
-  keepWindow = new BrowserWindow({
-    width: 800,
-    height: 1000,
-    x: 0,
-    y: 0
+    mainWindow.window.on('closed', function() {
+      mainWindow = null;
+      app.quit();
+    });
+
+    ipc.on('keep:click', function(event, arg) {
+      keepWindow.window.webContents.send('keep:register', arg);
+    });
+
+    ipc.on('loadurl', function(event, args) {
+      mainWindow.window.loadUrl(args.url);
+      mainWindow.window.focus();
+    });
   });
-  keepWindow.loadUrl('file://' + __dirname + '/keep.html');
-  keepWindow.openDevTools(true);
-  keepWindow.webContents.on('new-window', function(event, url) {
-    shell.openExternal(url);
-    event.preventDefault();
-  })
 
   var template = [
     {
@@ -80,29 +71,19 @@ app.on('ready', function() {
       {
             label: 'Reload',
             accelerator: 'Command+R',
-            click: function() { mainWindow.restart(); }
+            click: function() { mainWindow.window.restart(); }
       },
       {
             label: 'Reload',
             accelerator: 'Shift+Command+R',
-            click: function() { keepWindow.restart(); }
+            click: function() { keepWindow.window.restart(); }
       },
       {
         label: 'デベロッパーツール',
         accelerator: 'Alt+Command+I',
-        click: function() { mainWindow.toggleDevTools(); }
+        click: function() { mainWindow.window.toggleDevTools(); }
       },
     ]});
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
-  keepWindow.webContents.on('did-finish-load', function() {
-    ipc.on('keep:click', function(event, arg) {
-      keepWindow.webContents.send('keep:register', arg);
-    });
-
-    ipc.on('loadurl', function(event, args) {
-      mainWindow.loadUrl(args.url);
-      mainWindow.focus();
-    });
-  });
 });

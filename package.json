@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/mottox2/electron-chatwork/issues"
   },
-  "homepage": "https://github.com/mottox2/electron-chatwork#readme"
+  "homepage": "https://github.com/mottox2/electron-chatwork#readme",
+  "devDependencies": {
+    "babel": "^5.8.23"
+  }
 }
